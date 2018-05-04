@@ -1,0 +1,31 @@
+'This Macro is intended to convert an Excel sheet to an VCF file.
+
+Private Sub Create_VCF()
+    'Open a File in Specific Path in Output or Append mode
+    Dim FileNum As Integer
+    Dim iRow As Double
+    iRow = 2
+    FileNum = FreeFile
+    OutFilePath = "C:\Users\Lucas\Desktop\OutputVCF.VCF" 'Set the output directory and file name.
+    Open OutFilePath For Output As FileNum
+ 
+    'Loop through Excel Sheet each row and write it to VCF File
+    While VBA.Trim(Sheets("Plan1").Cells(iRow, 1)) <> "" 
+        'In "Plan1", replace by the name of the Sheet of your file
+        FName = VBA.Trim(Sheets("Plan1").Cells(iRow, 1))
+        WPhone = VBA.Trim(Sheets("Plan1").Cells(iRow, 2))
+        PhNum = VBA.Trim(Sheets("Plan1").Cells(iRow, 3))
+  
+        Print #FileNum, "BEGIN:VCARD"
+        Print #FileNum, "VERSION:3.0"
+        Print #FileNum, "FN:"; FName 'Sets a fullname
+        Print #FileNum, "TEL;TYPE=WORK;TYPE=PREF:" & WPhone 'Sets a Work Phone Number
+        Print #FileNum, "TEL;TYPE=CELL;TYPE=PREF:" & PhNum 'Sets a Mobile Phone Number
+        Print #FileNum, "END:VCARD"
+        iRow = iRow + 1
+    Wend
+ 
+    'Close The File
+    Close #FileNum
+    MsgBox "Contacts Converted to Saved To: " & OutFilePath & " "
+End Sub
